@@ -10,7 +10,6 @@
     :root {
       --bg: #f3eef8;
       --bg-2: #efe9f6;
-      --line: rgba(255, 255, 255, 0.68);
       --card: rgba(255, 255, 255, 0.58);
       --card-border: rgba(255, 255, 255, 0.8);
 
@@ -19,7 +18,6 @@
 
       --accent: #9a88ea;
       --accent-2: #8b78e4;
-      --accent-soft: #ddd3fb;
 
       --seg-1: #badfd6;
       --seg-2: #f1e0a5;
@@ -216,31 +214,23 @@
 
     .segment-text {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 22%;
+      width: 26%;
       text-align: center;
       color: var(--text);
-      font-size: clamp(13px, 1.35vw, 28px);
+      font-size: clamp(12px, 1.15vw, 22px);
       font-weight: 500;
-      line-height: 1.16;
-      transform-origin: center center;
+      line-height: 1.2;
       z-index: 3;
       pointer-events: none;
+      transform: translate(-50%, -50%);
     }
 
-    .segment-text span {
-      display: block;
-      transform: rotate(90deg);
-      white-space: normal;
-    }
-
-    .segment-0 { transform: translate(-50%, -50%) rotate(30deg) translateY(-36%); }
-    .segment-1 { transform: translate(-50%, -50%) rotate(90deg) translateY(-36%); }
-    .segment-2 { transform: translate(-50%, -50%) rotate(150deg) translateY(-36%); }
-    .segment-3 { transform: translate(-50%, -50%) rotate(210deg) translateY(-36%); }
-    .segment-4 { transform: translate(-50%, -50%) rotate(270deg) translateY(-36%); }
-    .segment-5 { transform: translate(-50%, -50%) rotate(330deg) translateY(-36%); }
+    .segment-0 { left: 38%; top: 28%; }
+    .segment-1 { left: 64%; top: 28%; }
+    .segment-2 { left: 77%; top: 50%; }
+    .segment-3 { left: 64%; top: 72%; }
+    .segment-4 { left: 38%; top: 72%; }
+    .segment-5 { left: 24%; top: 50%; }
 
     .cta-wrap {
       margin-top: 26px;
@@ -470,8 +460,9 @@
       }
 
       .segment-text {
-        width: 24%;
-        font-size: clamp(10px, 3vw, 16px);
+        width: 28%;
+        font-size: clamp(10px, 2.7vw, 15px);
+        line-height: 1.15;
       }
 
       .spin-btn {
@@ -533,12 +524,12 @@
 
           <div class="wheel-wrap">
             <div id="wheel" class="wheel">
-              <div class="segment-text segment-0"><span>Скидка 5%</span></div>
-              <div class="segment-text segment-1"><span>Скидка 10%</span></div>
-              <div class="segment-text segment-2"><span>Бесплатная доставка</span></div>
-              <div class="segment-text segment-3"><span>Подарок</span></div>
-              <div class="segment-text segment-4"><span>Мини-набор</span></div>
-              <div class="segment-text segment-5"><span>Главный приз</span></div>
+              <div class="segment-text segment-0">Скидка 5%</div>
+              <div class="segment-text segment-1">Скидка 10%</div>
+              <div class="segment-text segment-2">Бесплатная доставка</div>
+              <div class="segment-text segment-3">Подарок</div>
+              <div class="segment-text segment-4">Мини-набор</div>
+              <div class="segment-text segment-5">Главный приз</div>
             </div>
             <div class="wheel-center"></div>
           </div>
