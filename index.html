@@ -1,113 +1,129 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Колесо удачи</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Колесо удачи</title>
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-<style>
-body {
-  margin:0;
-  font-family: Arial;
-  background:#0f172a;
-  color:white;
-  text-align:center;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0F172A;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
 
-h1 {
-  margin:20px 0;
-}
+    h1 {
+      margin-bottom: 10px;
+    }
 
-.wheel {
-  width:300px;
-  height:300px;
-  margin:30px auto;
-  border-radius:50%;
-  border:8px solid white;
-  transition: transform 4s ease-out;
-  background: conic-gradient(
-    #f43f5e 0deg 60deg,
-    #f59e0b 60deg 120deg,
-    #10b981 120deg 180deg,
-    #3b82f6 180deg 240deg,
-    #8b5cf6 240deg 300deg,
-    #ec4899 300deg 360deg
-  );
-}
+    .wheel {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      border: 8px solid #ffffff;
+      position: relative;
+      transition: transform 4s ease-out;
+      box-shadow: 0 0 40px rgba(255,255,255,0.1);
+      background: conic-gradient(
+        #FADADD 0deg 60deg,
+        #D6E4FF 60deg 120deg,
+        #E7F9F0 120deg 180deg,
+        #FFF4CC 180deg 240deg,
+        #EDE9FE 240deg 300deg,
+        #FFE4E1 300deg 360deg
+      );
+    }
 
-.pointer {
-  width:0;
-  height:0;
-  border-left:15px solid transparent;
-  border-right:15px solid transparent;
-  border-top:25px solid white;
-  margin:auto;
-}
+    .pointer {
+      width: 0;
+      height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-bottom: 22px solid white;
+      margin-bottom: -10px;
+    }
 
-button {
-  padding:15px 25px;
-  font-size:18px;
-  border:none;
-  border-radius:10px;
-  background:#f59e0b;
-  cursor:pointer;
-}
+    button {
+      margin-top: 25px;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #FDE68A, #FCA5A5);
+      color: #111;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
 
-#result {
-  margin-top:20px;
-  font-size:20px;
-}
-</style>
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    .info {
+      margin-top: 15px;
+      font-size: 13px;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>🎡 Крути колесо</h1>
+  <h1>🎡 Крути колесо</h1>
+  <div class="pointer"></div>
 
-<div class="pointer"></div>
-<div class="wheel" id="wheel"></div>
+  <div id="wheel" class="wheel"></div>
 
-<button onclick="spin()">Крутить</button>
+  <button onclick="spin()">Крутить</button>
 
-<div id="result"></div>
+  <div id="result" class="result"></div>
+  <div class="info">Каждый участник может крутить только один раз</div>
 
-<script>
+  <script>
+    let spinning = false;
 
-const tg = window.Telegram.WebApp;
-tg.expand();
+    const prizes = [
+      "Скидка 5%",
+      "Скидка 10%",
+      "Бесплатная доставка",
+      "Подарок",
+      "Мини-набор",
+      "Главный приз"
+    ];
 
-let used = false;
+    function spin() {
+      if (spinning) return;
 
-function spin() {
-  if (used) return;
+      spinning = true;
 
-  used = true;
+      const wheel = document.getElementById("wheel");
+      const result = document.getElementById("result");
 
-  const prizes = [
-    "Скидка 5%",
-    "Скидка 10%",
-    "Бесплатная доставка",
-    "Подарок",
-    "Мини версия",
-    "Большой приз"
-  ];
+      const randomIndex = Math.floor(Math.random() * prizes.length);
+      const angle = 360 * 5 + (randomIndex * 60);
 
-  let index = Math.floor(Math.random() * prizes.length);
-  let deg = 360 * 5 + index * 60;
+      wheel.style.transform = `rotate(${angle}deg)`;
 
-  document.getElementById("wheel").style.transform = "rotate(" + deg + "deg)";
-
-  setTimeout(() => {
-    document.getElementById("result").innerText = "🎉 " + prizes[index];
-
-    tg.sendData(prizes[index]);
-
-  }, 4000);
-}
-
-</script>
+      setTimeout(() => {
+        result.innerText = "🎉 Ваш приз: " + prizes[randomIndex];
+        spinning = false;
+      }, 4000);
+    }
+  </script>
 
 </body>
 </html>
