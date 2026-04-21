@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Колесо удачи</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#0f172a;
+  color:white;
+  text-align:center;
+}
+
+h1 {
+  margin:20px 0;
+}
+
+.wheel {
+  width:300px;
+  height:300px;
+  margin:30px auto;
+  border-radius:50%;
+  border:8px solid white;
+  transition: transform 4s ease-out;
+  background: conic-gradient(
+    #f43f5e 0deg 60deg,
+    #f59e0b 60deg 120deg,
+    #10b981 120deg 180deg,
+    #3b82f6 180deg 240deg,
+    #8b5cf6 240deg 300deg,
+    #ec4899 300deg 360deg
+  );
+}
+
+.pointer {
+  width:0;
+  height:0;
+  border-left:15px solid transparent;
+  border-right:15px solid transparent;
+  border-top:25px solid white;
+  margin:auto;
+}
+
+button {
+  padding:15px 25px;
+  font-size:18px;
+  border:none;
+  border-radius:10px;
+  background:#f59e0b;
+  cursor:pointer;
+}
+
+#result {
+  margin-top:20px;
+  font-size:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎡 Крути колесо</h1>
+
+<div class="pointer"></div>
+<div class="wheel" id="wheel"></div>
+
+<button onclick="spin()">Крутить</button>
+
+<div id="result"></div>
+
+<script>
+
+const tg = window.Telegram.WebApp;
+tg.expand();
+
+let used = false;
+
+function spin() {
+  if (used) return;
+
+  used = true;
+
+  const prizes = [
+    "Скидка 5%",
+    "Скидка 10%",
+    "Бесплатная доставка",
+    "Подарок",
+    "Мини версия",
+    "Большой приз"
+  ];
+
+  let index = Math.floor(Math.random() * prizes.length);
+  let deg = 360 * 5 + index * 60;
+
+  document.getElementById("wheel").style.transform = "rotate(" + deg + "deg)";
+
+  setTimeout(() => {
+    document.getElementById("result").innerText = "🎉 " + prizes[index];
+
+    tg.sendData(prizes[index]);
+
+  }, 4000);
+}
+
+</script>
+
+</body>
+</html>
