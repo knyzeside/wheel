@@ -1,105 +1,189 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Колесо удачи</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ederra — Колесо удачи</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
+    :root {
+      --bg: #eeeeee;
+      --text: #3a312b;
+      --muted: #8d837a;
+
+      --wheel-1: #ead6d2; /* пудрово-бежевый */
+      --wheel-2: #d9e2ef; /* холодный голубовато-серый */
+      --wheel-3: #d7e4dc; /* мягкий sage */
+      --wheel-4: #efe2b8; /* шампань */
+      --wheel-5: #ddd8ec; /* припылённая лаванда */
+      --wheel-6: #e7cfcf; /* тёплая розовая пудра */
+
+      --white-ring: #faf8f5;
+      --gold-1: #f3e2b4;
+      --gold-2: #e4c98f;
+      --gold-border: #d8b97a;
+      --gold-text: #5a4630;
+
+      --shadow-soft: 0 18px 45px rgba(82, 67, 50, 0.08);
+      --shadow-btn: 0 10px 24px rgba(90, 70, 48, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
-      background: #eeeeee; /* 👈 НОВЫЙ ФОН */
-      color: #1e293b;
+      background: var(--bg);
+      color: var(--text);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      padding: 24px 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 460px;
+      display: flex;
       flex-direction: column;
+      align-items: center;
+      text-align: center;
     }
 
-    h1 {
-      margin-bottom: 10px;
+    .title {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 700;
+      color: var(--text);
     }
 
-    .wheel {
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      border: 8px solid #ffffff;
-      position: relative;
-      transition: transform 4s ease-out;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-      background: conic-gradient(
-        #FADADD 0deg 60deg,
-        #D6E4FF 60deg 120deg,
-        #E7F9F0 120deg 180deg,
-        #FFF4CC 180deg 240deg,
-        #EDE9FE 240deg 300deg,
-        #FFE4E1 300deg 360deg
-      );
+    .subtitle {
+      margin: 0 0 22px;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 320px;
     }
 
     .pointer {
       width: 0;
       height: 0;
-      border-left: 14px solid transparent;
-      border-right: 14px solid transparent;
-      border-bottom: 22px solid #1e293b;
-      margin-bottom: -10px;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 22px solid #8b7158;
+      margin-bottom: -8px;
+      z-index: 2;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
     }
 
-    button {
-      margin-top: 25px;
-      padding: 14px 28px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #f5e6c8, #e8cfa0); /* 👈 ЗОЛОТО */
-      color: #3b2f1c;
-      font-weight: 600;
-      font-size: 16px;
+    .wheel-wrap {
+      position: relative;
+      width: 332px;
+      height: 332px;
+      margin-bottom: 28px;
+    }
+
+    .wheel {
+      width: 332px;
+      height: 332px;
+      border-radius: 50%;
+      border: 10px solid var(--white-ring);
+      box-shadow: var(--shadow-soft);
+      transition: transform 4.2s cubic-bezier(.17,.67,.12,.99);
+      background: conic-gradient(
+        var(--wheel-1) 0deg 60deg,
+        var(--wheel-2) 60deg 120deg,
+        var(--wheel-3) 120deg 180deg,
+        var(--wheel-4) 180deg 240deg,
+        var(--wheel-5) 240deg 300deg,
+        var(--wheel-6) 300deg 360deg
+      );
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wheel-center {
+      position: absolute;
+      inset: 50%;
+      width: 74px;
+      height: 74px;
+      margin-left: -37px;
+      margin-top: -37px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #f8f5ef, #ece5d9);
+      border: 5px solid #f5f1ea;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.07);
+    }
+
+    .spin-btn {
+      border: 1px solid var(--gold-border);
+      background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+      color: var(--gold-text);
+      padding: 15px 34px;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      transition: all 0.2s ease;
+      box-shadow: var(--shadow-btn);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
 
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+    .spin-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(90, 70, 48, 0.18);
     }
 
-    button:active {
-      transform: scale(0.96);
+    .spin-btn:active {
+      transform: scale(0.98);
+    }
+
+    .spin-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
 
     .result {
-      margin-top: 20px;
+      margin-top: 22px;
+      min-height: 28px;
       font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
     }
 
     .info {
-      margin-top: 15px;
+      margin-top: 14px;
       font-size: 13px;
-      opacity: 0.6;
+      color: var(--muted);
     }
   </style>
 </head>
-
 <body>
+  <div class="app">
+    <h1 class="title">🎡 Крути колесо</h1>
+    <p class="subtitle">Заберите свой приз от Ederra после диагностики и подтверждения номера</p>
 
-  <h1>🎡 Крути колесо</h1>
-  <div class="pointer"></div>
+    <div class="pointer"></div>
 
-  <div id="wheel" class="wheel"></div>
+    <div class="wheel-wrap">
+      <div id="wheel" class="wheel"></div>
+      <div class="wheel-center"></div>
+    </div>
 
-  <button onclick="spin()">Крутить</button>
+    <button id="spinBtn" class="spin-btn" onclick="spin()">Крутить</button>
 
-  <div id="result" class="result"></div>
-  <div class="info">Каждый участник может крутить только один раз</div>
+    <div id="result" class="result"></div>
+    <div class="info">Каждый участник может крутить только один раз</div>
+  </div>
 
   <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) tg.expand();
+
     let spinning = false;
 
     const prizes = [
@@ -118,18 +202,31 @@
 
       const wheel = document.getElementById("wheel");
       const result = document.getElementById("result");
+      const button = document.getElementById("spinBtn");
+
+      button.disabled = true;
+      result.innerText = "";
 
       const randomIndex = Math.floor(Math.random() * prizes.length);
-      const angle = 360 * 5 + (randomIndex * 60);
 
-      wheel.style.transform = `rotate(${angle}deg)`;
+      // 5 полных оборотов + сектор
+      const angle = 360 * 5 + randomIndex * 60 + 30;
+
+      wheel.style.transform = `rotate(-${angle}deg)`;
 
       setTimeout(() => {
-        result.innerText = "🎉 Ваш приз: " + prizes[randomIndex];
+        result.innerText = `🎁 Ваш приз: ${prizes[randomIndex]}`;
         spinning = false;
-      }, 4000);
+        button.disabled = false;
+
+        if (tg && typeof tg.sendData === "function") {
+          tg.sendData(JSON.stringify({
+            type: "wheel_result",
+            prize: prizes[randomIndex]
+          }));
+        }
+      }, 4200);
     }
   </script>
-
 </body>
 </html>
